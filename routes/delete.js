@@ -11,23 +11,22 @@ const pool =  new  Pool({
   idleTimeoutMillis: 1000
 });
 
-module.exports.postStudent = (event, context, callback) => {
+module.exports.deleteStudents = (event, context, callback) => {
 console.log('event', event);
-const student_name = event.body.student_name;
-const grade_level = event.body.grade_level;
-  const postNewStudent = `INSERT INTO ${table} VALUES(default, $1, $2);`;
+  const id = event.body.id;
+  const deleteStudent = `DELETE FROM ${table} WHERE id = $1`;
   
   pool.connect()
   .then(client => {
     client.release()
-    return client.query(postNewStudent, [student_name, grade_level]);
-  })
+    return client.query(deleteStudent, [id]);
+  })      
   .then(res => {
-  const response = {
+  const response = {      
     statusCode: 200,
     headers: {
       'Access-Control-Allow-Origin': 'http://127.0.0.1:8080',
-      'Access-Control-Allow-Credentials': true
+      'Access-Control-Allow-Credentials': true                                 
     },
     body: JSON.stringify({
       message: res,
